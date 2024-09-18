@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message App</title>
+</head>
+<body>
+<h1>Submit a Message</h1>
+
+<form id="messageForm">
+    <label for="message">Message: </label>
+    <input type="text" id="message" name="message" required>
+    <button type="submit">Submit</button>
+</form>
+
+<h2>Response</h2>
+<div id="response"></div>
+
+<script>
+    const form = document.getElementById('messageForm');
+    const responseDiv = document.getElementById('response');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form from reloading the page
+
+        const messageContent = document.getElementById('message').value;
+
+        // Send message to the REST API
+        fetch('/api/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: messageContent }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            responseDiv.innerHTML = `Message saved: ${data.message}`;
+            form.reset(); // Clear the form
+        })
+        .catch(error => {
+            responseDiv.innerHTML = 'Error saving message';
+            console.error('Error:', error);
+        });
+    });
+</script>
+</body>
+</html>
