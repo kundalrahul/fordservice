@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: gradle-cloudrun-pipeline
+spec:
+  workspaces:
+    - name: shared-workspace
+  tasks:
+    - name: apply-manifests
+      taskRef:
+        name: apply-k8s-task
+      params:
+        - name: manifests
+          value:
+            - /workspace/source/tekton/tasks/build-task.yaml
+            - /workspace/source/tekton/tasks/push-to-registry-task.yaml
+            - /workspace/source/tekton/tasks/deploy-task.yaml
+    - name: run-pipeline
+      taskRef:
+        name: run-tekton-pipeline-task
+      runAfter:
+        - apply-manifests

@@ -1,0 +1,12 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: run-tekton-pipeline-task
+spec:
+  steps:
+    - name: start-pipeline
+      image: bitnami/kubectl:latest
+      script: |
+        tkn pipeline start gradle-cloudrun-pipeline \
+          -w name=shared-workspace,claimName=tekton-pvc \
+          --showlog

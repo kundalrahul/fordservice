@@ -1,0 +1,22 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: github-triggertemplate
+spec:
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: github-pipelinerun-
+      spec:
+        pipelineRef:
+          name: gradle-cloudrun-pipeline
+        workspaces:
+          - name: shared-workspace
+            persistentVolumeClaim:
+              claimName: tekton-pvc
+        params:
+          - name: git-url
+            value: $(params.git-repo-url)
+          - name: revision
+            value: $(params.git-revision)

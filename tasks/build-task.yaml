@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-task
+spec:
+  workspaces:
+    - name: shared-workspace
+  steps:
+    - name: docker-build
+      image: docker:20.10.7
+      script: |
+        # Log in to GCP Container Registry if needed (add your login command here)
+        docker build -t gcr.io/ford-435123/fordpoc:latest .
+      volumeMounts:
+        - name: docker-socket
+          mountPath: /var/run/docker.sock
+      workingDir: /workspace/shared-workspace
+  volumes:
+    - name: docker-socket
+      hostPath:
+        path: /var/run/docker.sock

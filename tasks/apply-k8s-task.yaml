@@ -1,0 +1,16 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: apply-k8s-task
+spec:
+  params:
+    - name: manifests
+      type: array
+  steps:
+    - name: apply-k8s
+      image: bitnami/kubectl:latest
+      script: |
+        for manifest in $(params.manifests); do
+          kubectl apply -f $manifest
+        done
+      workingDir: /workspace/source

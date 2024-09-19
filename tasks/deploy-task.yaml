@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: deploy-task
+spec:
+  steps:
+    - name: deploy-cloud-run
+      image: google/cloud-sdk:latest
+      script: |
+        gcloud run deploy fordpoccloudrunservice --image gcr.io/ford-435123/fordpoc:latest --region us-central1 --platform managed --allow-unauthenticated
